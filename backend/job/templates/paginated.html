@@ -1,0 +1,37 @@
+{% extends "detail.html" %}
+
+{%block pagination%}
+<div class="text-center">
+
+  <a
+    class="me-2 btn btn-primary"
+    href="{%url "job-apply-detail" apply=apply page=prev %}"
+  >
+    Prev
+  </a>
+
+  <button class="btn 
+
+    {%if job.is_applying == "YES"%}
+      btn-success
+    {%elif job.is_applying == "NO" %}
+      btn-danger
+    {%elif job.is_applying == "MAYBE" %}
+      btn-warning
+    {%else%}
+      btn-secondary
+    {%endif%}
+
+  ">
+    Page {{current}}
+  </button>
+
+  <a
+    class="ms-2 btn btn-primary"
+    href="{%url "job-apply-detail" apply=apply page=next %}"
+  >
+    Next
+  </a>
+
+</div>
+{%endblock%}

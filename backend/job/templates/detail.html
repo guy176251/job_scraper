@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% load tz %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+  {{ job.title }}
+{% endblock %}
+
+{%block body%}
+
+<div class="row g-4">
+  <div class="col col-12">
+    <div class="text-center">
+      <h2 class="m-3 card-title">{{job.title}}</h2>
+      <p>{{job.company_name}}</p>
+      <a class="btn btn-warning"  target="_blank" href="https://google.com/search?q={{job.company_name}}">Google search</a>
+      <a class="btn btn-info"  target="_blank" href="https://www.glassdoor.com/Reviews/company-reviews.htm?sc.keyword={{job.company_name}}&Autocomplete=">Glassdoor reviews</a>
+      <a class="btn btn-primary"  target="_blank" href="{{job.info.job.absoluteUrl}}">Job Link</a>
+      <a class="btn btn-success"  target="_blank" href="https://www.simplyhired.com{{job.info.applyUrl}}">
+        {% if job.info.job.indeedApply %}
+          Indeed
+        {% else %}
+          External
+        {% endif %}
+        Apply Link
+      </a>
+    </div>
+  </div>
+  <div class="col col-12">{%block pagination%} {%endblock%}</div>
+  <div class="col col-8">
+    <div class="row g-4">
+      <div class="col col-12">
+        <div class="card">
+          <div class="card-body">
+            <p class="card-text">{{job.description|safe}}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col col-12">
+        <div class="card">
+          <div class="card-body">
+            <form action="{%url "main:update-application" job.key %}" method="post">
+              {% crispy app_form %}
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col col-4">
+    <div class="row g-4">
+      {%if job.requirements %}
+      <div class="col col-12">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="mb-4 card-title">Total Experience</h5>
+
+            {%for req in job.requirements%}
+            <p class="card-text">{{req.string}}</p>
+            {%endfor%}
+          </div>
+        </div>
+      </div>
+      {%endif%}
+      {%if job.rating %}
+      <div class="col col-12">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Rating</h5>
+
+            <p class="card-text">{{job.rating}}</p>
+          </div>
+        </div>
+      </div>
+      {%endif%}
+      <div class="col col-12">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Created On</h5>
+
+            <p class="card-text">{{job.created_on|timezone:"US/Central"}}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col col-12">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Location</h5>
+
+            <p class="card-text">{{job.location}}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col col-12">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Skills</h5>
+
+            <ul>
+              {%for kw in job.skills%}
+              <li>{{kw}}</li>
+              {%endfor%}
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="col col-12">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">{{job.company_name}}</h5>
+            <form action="{%url "main:update-company" slug=job.company_name.slug %}" method="post">
+              {% crispy company_form %}
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{%endblock%}

@@ -1,0 +1,116 @@
+{% extends "base.html" %} 
+{% load tz %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+  {% if search %}
+  Search
+  {% elif apply %}
+  Apply: {{ apply|title }}
+  {% else %}
+  Jobs
+  {% endif %}
+  {% if jobs.paginator.num_pages > 1 %}
+  - Page {{ page_num }}
+  {% endif %}
+{% endblock %}
+
+{%block body%}
+
+<div class="row g-4 justify-content-center">
+  <div class="col col-12">
+    <div class="text-center">
+      <h1 class="my-3">{{ job_count }}
+        {% if search %}
+        Results for "{{ search }}"
+        {% else %}
+        Jobs
+        {% endif %}
+      </h1>
+    </div>
+  </div>
+
+  <div class="col col-12">
+    <div class="text-center">
+      <a class="btn btn-secondary" href="{%url "main:job-list" %}">New</a>
+      <a class="btn btn-success"   href="{%url "main:job-list" %}?apply=yes">Applying</a>
+      <a class="btn btn-danger"    href="{%url "main:job-list" %}?apply=no">Not Applying</a>
+      <a class="btn btn-warning"   href="{%url "main:job-list" %}?apply=maybe">Iffy</a>
+      <a class="btn btn-info"      href="{%url "main:job-list" %}?blocked=1">Blocked</a>
+    </div>
+  </div>
+
+  <div class="col col-3"></div>
+
+  <div class="col col-6">
+    <form type="get" action="{{ request.path }}">
+      {% crispy searchbar %}
+    </form>
+  </div>
+
+  <div class="col col-3"></div>
+
+  {% if jobs.paginator.num_pages > 1 %}
+  <div class="col col-auto">
+    <ul class="pagination mb-0">
+      {% for num, link in pagination_links %}
+      <li class="page-item
+        {% if page_num == num %}
+          active
+        {% endif %}
+        "><a class="page-link" href="{{ link }}">{{ num }}</a></li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+  {%for job in jobs%}
+  <div class="col col-12">
+    <a class="card-link" href="{% url "main:job-detail" key=job.key %}">
+      <div class="card">
+        <div class="card-body">
+          <button class="btn rounded-pill mb-3 
+            {% if apply == "yes" %}
+              btn-success
+            {% elif apply == "no" %}
+              btn-danger
+            {% elif apply == "maybe" %}
+              btn-warning
+            {% else %}
+              btn-secondary
+            {% endif %}
+          ">
+            <h5 class="card-title m-0">{{forloop.counter}}. {{job.title}}</h5>
+          </button>
+          <div class="ps-3">
+            <p class="card-text"><b>{{job.company_name}}</b></p>
+            <p class="card-text">{{job.created_on|timezone:"US/Central"}}</p>
+
+            {%if job.notes%}
+            <div class="ps-3 border-5 border-start border-secondary">
+              <p class="card-text">{{job.notes|linebreaks}}</p>
+            </div>
+            {%endif%}
+          </div>
+        </div>
+      </div>
+    </a>
+  </div>
+  {%endfor%}
+
+  {% if jobs.paginator.num_pages > 1 %}
+  <div class="col col-auto">
+    <ul class="pagination mb-0">
+      {% for num, link in pagination_links %}
+      <li class="page-item
+        {% if page_num == num %}
+          active
+        {% endif %}
+        "><a class="page-link" href="{{ link }}">{{ num }}</a></li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+</div>
+{%endblock%}

@@ -1,0 +1,48 @@
+[tool.poetry]
+name = "simplyhired_scraper"
+version = "0.1.0"
+description = ""
+authors = ["long <longnguyen176251@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+Django = "^4.0.2"
+django-ninja = "^0.17.0"
+bs4 = "^0.0.1"
+httpx = "^0.22.0"
+lxml = "^4.8.0"
+ipython = "^8.0.1"
+nltk = "^3.7"
+markdownify = "^0.10.3"
+thefuzz = {extras = ["speedup"], version = "^0.19.0"}
+django-crispy-forms = "^1.14.0"
+crispy-bootstrap5 = "^0.6"
+TexSoup = "^0.3.1"
+django-stubs-ext = "^0.3.1"
+django-stubs = "^1.9.0"
+brotlicffi = "^1.0.9"
+pydantic = "^1.9.0"
+devtools = "^0.8.0"
+arrow = "^1.2.2"
+Faker = "^13.3.2"
+django-sql-utils = "^0.6.1"
+
+[tool.poetry.dev-dependencies]
+flake8 = "^4.0.1"
+black = "^22.1.0"
+isort = "^5.10.1"
+mypy = "^0.931"
+neovim = "^0.3.1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.mypy]
+plugins = ["mypy_django_plugin.main"]
+
+[tool.django-stubs]
+django_settings_module = "backend.settings"
+
+[tool.black]
+line-length = 79

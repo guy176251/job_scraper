@@ -1,0 +1,10 @@
+.mypy_cache/
+Session.vim
+__pycache__/
+.old/
+applications.sqlite3
+db.sqlite3
+info.pickle
+keywords/
+resume/
+weighted_descriptions.json
