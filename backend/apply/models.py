@@ -19,7 +19,7 @@ class Application(models.Model):
 
     objects = ApplicationQueryset.as_manager()
 
-    APPLY_VALUES = ["yes", "no", "maybe"]
+    APPLY_VALUES = ["yes", "no", "done"]
     APPLY_CHOICES: list[tuple[str, str]] = [
         (v, v.lower().title()) for v in APPLY_VALUES
     ]

@@ -35,7 +35,7 @@
       <a class="btn btn-secondary" href="{%url "main:job-list" %}">New</a>
       <a class="btn btn-success"   href="{%url "main:job-list" %}?apply=yes">Applying</a>
       <a class="btn btn-danger"    href="{%url "main:job-list" %}?apply=no">Not Applying</a>
-      <a class="btn btn-warning"   href="{%url "main:job-list" %}?apply=maybe">Iffy</a>
+      <a class="btn btn-primary"   href="{%url "main:job-list" %}?apply=done">Finished</a>
       <a class="btn btn-info"      href="{%url "main:job-list" %}?blocked=1">Blocked</a>
     </div>
   </div>
@@ -74,8 +74,8 @@
               btn-success
             {% elif apply == "no" %}
               btn-danger
-            {% elif apply == "maybe" %}
-              btn-warning
+            {% elif apply == "done" %}
+              btn-primary
             {% else %}
               btn-secondary
             {% endif %}

@@ -4,10 +4,6 @@ This is my own personal job application helper that I made to aid me in applying
 
 Often, I find myself wanting to keep track of all the jobs I've applied for, in addition to tailoring my resume to each job. This results in me having to keep track of various text files and lots of manual clicking and other bothersome things. I figured, why not make an app to help me with this process?
 
-## General Functionality
-
-broad description of app functions
-
 ## Pictures
 
 ![List view](/docs/images/main-view.png)

@@ -90,15 +90,7 @@ class Job(models.Model):
     def application(self):
         return Application.objects.get(pk=self.key)
 
-    class Meta:
-        ordering = [
-            "requirement_years",
-            "-info__job__indeedApply",
-            "-created_on",
-            "description__length",
-        ]
-
-    class QuerySet(models.QuerySet):
+    class ReadOperations(models.QuerySet):
         def base_filter(self):
             """
             Filters out things that shouldn't be in any queryset.
@@ -121,15 +113,6 @@ class Job(models.Model):
                 in_local_area & half_year_old & not_senior
             ).select_related(
                 "company_name",
-            )
-
-        def update_keywords(self, pk, keyword_string: str):
-            return self.filter(pk=pk).update(
-                keywords=[
-                    t.strip()
-                    for t in keyword_string.strip().splitlines()
-                    if t.strip()
-                ]
             )
 
         def get_applying(self, apply: str):
@@ -159,17 +142,19 @@ class Job(models.Model):
                     Q(title__iregex=search) | Q(description__iregex=search)
                 )
 
-            def query(keyword):
+            def contains(keyword):
                 return Q(title__icontains=keyword) | Q(
                     description__icontains=keyword
                 )
 
-            keywords = [s.strip() for s in search.strip().split()]
-            queries = [
-                ~(query(kw[1:])) if kw.startswith("-") else query(kw)
-                for kw in keywords
-            ]
-            whole_query = reduce(operator.and_, queries[1:], queries[0])
+            keywords = (s.strip() for s in search.strip().split())
+            queries = (
+                ~contains(word[1:])
+                if word.startswith("-")
+                else contains(word)
+                for word in keywords
+            )
+            whole_query = reduce(operator.and_, queries, Q())
 
             return self.filter(whole_query)
 
@@ -215,7 +200,28 @@ class Job(models.Model):
                 .get_indeed_applies(indeed)
             )
 
+    class WriteOperations(models.QuerySet):
+        def update_keywords(self, pk, keyword_string: str):
+            return self.filter(pk=pk).update(
+                keywords=[
+                    t.strip()
+                    for t in keyword_string.strip().splitlines()
+                    if t.strip()
+                ]
+            )
+
+    class QuerySet(ReadOperations, WriteOperations):
+        ...
+
     objects: Any = QuerySet.as_manager()
+
+    class Meta:
+        ordering = [
+            "requirement_years",
+            "-info__job__indeedApply",
+            "-created_on",
+            "description__length",
+        ]
 
 
 class Company(models.Model):
